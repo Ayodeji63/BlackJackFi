@@ -274,4 +274,65 @@ export class Game {
             }
         }
     }
+
+    private handleDeallerActionsAndWinnerCounting = async () => {
+        while (this.dealerActionHip.length) {
+            const data = this.dealerActionHip.shift();
+            const table = data?.table;
+            const actionType = data?.action;
+            if (table) {
+                await new Promise((resolve) => setTimeout(resolve, this.dealerActionHip.length ? 1000 : 1500)
+                );
+                this.handleTableUpdate(table);
+                if (this.dealerActionHip.length === 1) {
+                    this.allActionsMade = true;
+                }
+                // music
+                if (actionType === ActionType.Hit) {
+                    this.playSound(SoundType.Flip);
+                }
+            }
+        }
+    };
+
+    private handleTableUpdate(tableStr: string) {
+        const table = JSON.parse(this.table) as ITable;
+        this.updateTableInfo(table);
+    }
+
+    @action.bound private updateAllPlayersArray(source: IPlayer[]) {
+        const target: IPlayer[] = JSON.parse(
+            JSON.stringify(this.table?.allPlayers)
+        ) as IPlayer[];
+    }
+
+    private updateTableInfo(table: ITable) {
+        const dealerHand = table.dealer?.hand.map((card) => new Card(card.suit, card.rank, card.value, card.id, card.isNew)
+        );
+
+        let dealer: Dealer | null;
+        if (!table.dealer) {
+            dealer = null;
+        } else if (this.table?.dealer) {
+            dealer = this.table.dealer.update(table.dealer);
+        } else if (table.dealer) {
+            dealer = new Dealer(
+                table.dealer.spotId,
+                dealerHand ?? [],
+                table.dealer.roundIsEnded,
+                table.dealer.id
+            );
+        } else {
+            dealer = null;
+        }
+
+        if (this.table) {
+            this.table.dealer = dealer;
+            this.table.roundIsStarted = table.roundIsStarted;
+            this.table.currentPlayerIndex = table.currentPlayerIndex;
+            this.updateAllPlayersArray(table.allPlayers);
+        }
+    }
 }   
+
+export const game = new Game();
