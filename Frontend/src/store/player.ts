@@ -80,4 +80,51 @@ export class Player extends Dealer {
         ? PlayerType.Subplayer
         : PlayerType.Parent;
   }
+
+  @computed public get isTurn(): boolean {
+    return (
+      game.table?.currentPlayer?.id === this.id ||
+      game.table?.currentPlayer?.parentPlayer?.id === this?.id
+    );
+  }
+
+  @computed public get canHit(): boolean {
+    return this.isActive;
+  }
+
+  @computed public get canSplit(): boolean {
+    return (
+      this.hand[0].rank === this.hand[1].rank &&
+      !this.roundIsStarted &&
+      !this.isSplitted
+    );
+  }
+
+  @computed public get isSplitted(): boolean {
+    return this.isSubplayer || (game.table?.spots[this.spotId].length ?? 1) > 1;
+  }
+
+  @computed public get isSubplayer(): boolean {
+    return !!this.parentAfterSplitPlayer;
+  }
+
+  @computed public get canDouble(): boolean {
+    return (
+      this.isActive &&
+      !this.roundIsStarted &&
+      !(this.insuranceBet && this.insuranceBet > 0) &&
+      !this.isSplitted
+    );
+  }
+
+  @computed public get canInsurance(): boolean {
+    return (
+      !this.isNaturalBJ &&
+      !this.isBJ &&
+      (game.table?.needInsurance ?? false) &&
+      this.insuranceBet === null &&
+      !this.roundIsStarted
+    );
+  }
+
 }
