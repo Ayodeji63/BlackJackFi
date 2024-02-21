@@ -72,4 +72,12 @@ export class Player extends Dealer {
       ? this.parentPlayer._balance
       : this._balance;
   }
+
+  @computed public get playerType(): PlayerType {
+    return this.parentPlayer
+      ? PlayerType.Player
+      : this.parentAfterSplitPlayer
+        ? PlayerType.Subplayer
+        : PlayerType.Parent;
+  }
 }
