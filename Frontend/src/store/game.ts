@@ -25,6 +25,7 @@ import { Music } from './music';
 import { Table } from './table';
 import { Card } from './card';
 import { Chat } from './chat';
+import { resolve } from "path";
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
@@ -213,5 +214,64 @@ export class Game {
         this.music = new Music();
         this.updateTableInfo(table);
         this.player = this.findPlayerById(player.id) ?? null;
+
+        chat.messages.forEach((message) => {
+            this.chat?.addMessage(message);
+        });
+    };
+
+    @action.bound public onTableJoined(table: ITable): void {
+        this.updateAllPlayersArray(table.allPlayers);
+    }
+
+    @action.bound public modalUpdate(
+        hide: boolean,
+        type = this.modal.type
+    ): void {
+        this.modal.type = type;
+        this.modal.hide = hide;
+    }
+
+    public findPlayerById(playerId: string): Player | undefined {
+        const table = this.table;
+        return table
+          ? table.allPlayers.find((player) => player.id === playerId)
+          : undefined;
+      }
+
+    public playSound(soundType: SoundType): void {
+        const audio = this.music?.sounds[soundType] ?? this.music?.notifications[soundType];
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+             // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        audio.play();
+        }
+    }
+
+    public getNameBySpotId(id: string): string {
+        const spot = this.table?.spots[id];
+        if (spot) {
+            const spotParent = spot ? spot[0].parentPlayer : undefined;
+            const name = spotParent ? spotParent.name : '';
+            return name
+        } else {
+            return '';
+        }
+    }
+
+    private handleAdditionalStand() {
+        if (this.player?.id === this.table?.currentPlayer?.id || this.player?.id === this.table?.currentPlayer?.parentPlayer?.id || this.player?.id === this.table?.currentPlayer?.parentAfterSplitPlayer?.id) {
+            if (this.table?.currentPlayer?.isBJ || this.table?.currentPlayer?.isBust || this.table?.currentPlayer?.isNaturalBJ) {
+                (async () => {
+                    try {
+                        await new Promise((resolve) => setTimeout(resolve, 600));
+                        this.emit[SocketEmit.Action](ActionType.Stand)
+                    } catch (error) {
+                        
+                    }
+                })
+            }
+        }
     }
 }   
