@@ -15,6 +15,7 @@ export const BetPanel: React.FC = observer(() => {
     (value: TBet) => () => {
       if (table) {
         table.currentBetBtnValue = value;
+        console.log('Bet is made here');
       }
     },
     [table]
