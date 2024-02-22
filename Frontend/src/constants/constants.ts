@@ -1,4 +1,4 @@
-import { TBet } from "../types.ds";
+import { TBet } from '../types.ds';
 
 export enum Color {
   Bet2 = '#ADD8E6',

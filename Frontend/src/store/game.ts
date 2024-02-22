@@ -22,9 +22,9 @@ import { IChat } from '../types.ds';
 import { Dealer } from './dealer';
 import { Player } from './player';
 import { Music } from './music';
-import { Table } from './table';
 import { Card } from './card';
 import { Chat } from './chat';
+import { Table } from './table';
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 

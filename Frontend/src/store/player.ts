@@ -266,6 +266,3 @@ export class Player extends Dealer {
     return this;
   }
 }
-
-  // username: aaayoola19@student.lautech.edu.ng 
-  // password: 8bk74c
