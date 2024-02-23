@@ -13,7 +13,7 @@ export const App: React.FC = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<SignUpPage />} />
+        <Route path="/" element={<EnterPage />} />
         <Route path="/table" element={<GamePage />} />
       </Routes>
       <ToastContainer

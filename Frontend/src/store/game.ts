@@ -35,7 +35,7 @@ export class Game {
   @observable public music: Music | null = null;
   @observable public allActionsMade = false;
   @observable public modal: IModal = {
-    type: ModalTypes.SignUp,
+    type: ModalTypes.CreateOrJoin,
     hide: false,
   };
 
