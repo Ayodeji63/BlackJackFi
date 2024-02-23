@@ -9,6 +9,7 @@ import { Overflow } from './ModalsManager.styled';
 import { EnterForm } from './Modals/EnterForm';
 import { game } from '../../store/game';
 import { Chat } from './Chat/Chat';
+import { SignUpForm } from "./Modals/SignUpForm";
 
 const MODAL_COMPONENTS = {
   [ModalTypes.CreateOrJoin]: EnterForm,
@@ -16,6 +17,7 @@ const MODAL_COMPONENTS = {
   [ModalTypes.GameEnd]: GameEndForm,
   [ModalTypes.Chat]: Chat,
   [ModalTypes.Sounds]: SoundSettingsForm,
+  [ModalTypes.SignUp]: SignUpForm,
 };
 
 export const ModalsManager: React.FC = observer(() => {

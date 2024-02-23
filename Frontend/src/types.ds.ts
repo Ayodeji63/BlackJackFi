@@ -134,6 +134,7 @@ export enum ModalTypes {
   GameEnd = 'GameEnd',
   Chat = 'Chat',
   Sounds = 'Sounds',
+  SignUp = 'signup'
 }
 
 export interface IModal {

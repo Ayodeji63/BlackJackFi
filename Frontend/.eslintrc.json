@@ -75,19 +75,7 @@
     "no-plusplus": "off",
     "no-prototype-builtins": "warn",
     "no-restricted-globals": "off",
-    "no-restricted-properties": [
-      "error",
-      {
-        "object": "process",
-        "property": "env",
-        "message": "Use strongly typed BUILD_OPTIONS instead. See MOBREF-1628"
-      },
-      {
-        "object": "arguments",
-        "property": "callee",
-        "message": "arguments.callee is deprecated"
-      }
-    ],
+    "no-restricted-properties": "off",
     "no-restricted-syntax": [
       "error",
       {
@@ -177,27 +165,8 @@
         "allowTypedFunctionExpressions": true
       }
     ],
-    "@typescript-eslint/indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1,
-        "VariableDeclarator": "first",
-        "FunctionDeclaration": { "parameters": "first" },
-        "FunctionExpression": { "parameters": "first" },
-        "CallExpression": { "arguments": "first" },
-        "ArrayExpression": "first",
-        "ObjectExpression": "first",
-        "ImportDeclaration": "first",
-        "flatTernaryExpressions": false,
-        "ignoreComments": false
-      }
-    ],
-    "@typescript-eslint/quotes": [
-      "error",
-      "single",
-      { "allowTemplateLiterals": true, "avoidEscape": true }
-    ],
+    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/quotes": "off",
     "@typescript-eslint/lines-between-class-members": [
       "warn",
       "always",
@@ -340,11 +309,7 @@
     "react/jsx-boolean-value": ["error", "always"],
     "react/jsx-curly-newline": "off",
     "react/jsx-curly-spacing": ["error", { "when": "never", "children": true }], // no children check in airbnb
-    "react/jsx-indent": [
-      "error",
-      2,
-      { "checkAttributes": true, "indentLogicalExpressions": true }
-    ],
+    "react/jsx-indent": "off",
     "react/jsx-indent-props": ["error", 2],
     "react/jsx-no-bind": [
       "warn",

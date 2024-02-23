@@ -7,12 +7,13 @@ import { ModalsManager } from '../ModalsManager/ModalsManager';
 import { SoundsContainer } from '../../sounds/SoundsContainer';
 import { EnterPage } from '../../pages/EnterPage/EnterPage';
 import { GamePage } from '../../pages/GamePage/GamePage';
-
+import { SignUpForm } from "../ModalsManager/Modals/SignUpForm";
+import { SignUpPage } from '../../pages/SignUp/SignUp';
 export const App: React.FC = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<EnterPage />} />
+        <Route path="/" element={<SignUpPage />} />
         <Route path="/table" element={<GamePage />} />
       </Routes>
       <ToastContainer
