@@ -38,7 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     userbase
       .init({
-        appId: process.env.REACT_PUBLIC_USERBASE_APP_ID!,
+        appId: process.env.REACT_APP_PUBLIC_USERBASE_APP_ID!,
       })
       .then((session: any) => {
         // SDK initialized successfully

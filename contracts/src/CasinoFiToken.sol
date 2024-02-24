@@ -11,7 +11,7 @@ contract CasinoFiToken is ERC20, Ownable {
     uint256 public constant DEVELOPER_REWARDS_SUPPLY = (4 * MAX_SUPPLY) / 100; // 4% for developers
     uint256 public constant STAKING_REWARDS_SUPPLY = (1 * MAX_SUPPLY) / 100; // 1% for staking rewards
     uint256 public constant BUYBACK_AND_BURN_SUPPLY = (1 * MAX_SUPPLY) / 100; // 1% for buyback and burn
-    uint256 public constant EARLY_ACCESS_AMOUNT = 100;
+    uint256 public constant EARLY_ACCESS_AMOUNT = 100e18;
     address public immutable i_owner;
 
 

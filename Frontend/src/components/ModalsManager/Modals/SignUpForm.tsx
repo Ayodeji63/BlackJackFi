@@ -9,7 +9,7 @@ import { publicClient } from '../../../utils/client';
 import simpleFactoryAbi from '../../../utils/SimpleAccountFactory.json';
 import axios from 'axios';
 import { createLightAccountAlchemyClient } from "@alchemy/aa-alchemy";
-import { LocalAccountSigner, sepolia, type Hex } from "@alchemy/aa-core";
+import { LocalAccountSigner, polygonMumbai, arbitrumSepolia, type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
 
 
 import {
@@ -22,10 +22,12 @@ import {
   Label,
   Form,
 } from '../ModalsManager.styled';
-import { SocketEmit, SocketOn } from '../../../types.ds';
+import { ModalTypes, SocketEmit, SocketOn } from '../../../types.ds';
 import { StyledBtn } from '../../App/App.styled';
 import { socket } from '../../../server/socket';
 import { game } from '../../../store/game';
+import { encodeFunctionData, parseEther } from 'viem';
+import casinoFiAbi from "../../../CasinoFiToken.json";
 
 
 
@@ -43,20 +45,28 @@ export const SignUpForm: React.FC = () => {
     watch,
     setError,
   } = useForm<FormValues>();
-  const {user, login} = useAuth();
+  const {user, login, logout} = useAuth();
 
   const [disabled, setDisabled] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const ALCHEMY_API_URL = `https://eth-sepolia.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`;
-  const AA_APIKEY = process.env.REACT_APP_ALCHEMY_API_KEY;
-  const chain = sepolia;
+  const AA_APIKEY = String(process.env.REACT_APP_ARB_API_KEY);
+  const chain = arbitrumSepolia;
 
   const ENTRYPOINT_ADDRESS = process.env
   .SEPOLIA_ENTRYPOINT_ADDRESS as `0x${string}`;
 const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
   .SEPOLIA_SIMPLE_ACCOUNT_FACTORY_ADDRESS as `0x${string}`;
 
+  
+  useEffect(() => {
+    if (user?.isLoggedIn) {
+      game.modalUpdate(true);
+      navigate("/dashboard");   
+    }
+    setDisabled(false);
+  }, [user])
 
   
   const handleSignup = async (username: string, password: string) => {
@@ -72,19 +82,11 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
           apiKey: AA_APIKEY,
           chain,
           signer,
+          gasManagerConfig: {
+            policyId: String(process.env.REACT_APP_ARB_POLICY_ID)
+          }
         });
-        
-
         const userScwAddress = provider.getAddress();
-        
-
-      
-        // const userScwAddress: string = (await publicClient.readContract({
-        //   address: "0x9406Cc6185a346906296840746125a0E44976454", // simple factory addr
-        //   abi: simpleFactoryAbi,
-        //   functionName: "getAddress",
-        //   args: [ownerAddress, 0],
-        // })) as string;
 
         const response2 = await userbase.signUp({
           username,
@@ -96,6 +98,8 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
           },
         });
 
+        console.log(`response is`, response2);
+
         const userInfo = {
           username: username,
           isLoggedIn: true, 
@@ -104,8 +108,32 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
         };
         login(userInfo);
 
+        const data = encodeFunctionData({
+          abi: casinoFiAbi,
+          functionName: "mintForEarlyUsers",
+          args: [],
+        });
+
+        const amountToSend: bigint = parseEther("0");
+        const contractAddress = process.env.REACT_APP_CASINOFI_TOKEN_ADDRESS_ARB as `0x${string}`;
+
+        const { hash: uoHash } = await provider.sendUserOperation({
+          uo: {
+            target: contractAddress, // The desired target contract address
+            data: data, // The desired call data
+            value: amountToSend, // (Optional) value to send the target contract address
+          },
+        });
+
+        console.log(uoHash); // Log the transaction hash
+
+        
+          console.log(`Userinfo is: `, userInfo);
+          game.modalUpdate(true);
+          navigate("/dashboard");   
+
       } catch (error) {
-        alert(error);
+        console.log(error);
         
       }
     }
@@ -121,53 +149,58 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
 
 
 
+
+
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      <InputWrapper>
-        {errors.username && <ErrorMsg>{errors.username.message}</ErrorMsg>}
-        <Input
-          autoComplete="off"
-          className={`${watch('username') ? 'filled' : ''}`}
-          type="text"
-          {...register('username', {
-            required: 'Name is required',
-            minLength: {
-              value: 3,
-              message: 'Name should be at least 3 characters',
-            },
-            maxLength: {
-              value: 25,
-              message: 'Name should not exceed 25 characters',
-            },
-          })}
-        />
-        <Label>User Name:</Label>
-      </InputWrapper>
-      <InputWrapper>
-        {errors.password && <ErrorMsg>{errors.password.message}</ErrorMsg>}
-        <Input
-          autoComplete="off"
-          className={`${watch('password') ? 'filled' : ''}`}
-          type="password"
-          {...register('password', {
-            required: 'Password is required',
-            minLength: {
-              value: 8,
-              message: 'Password should be at least 3 characters',
-            },
-        
-          })}
-        />
-        <Label>Password:</Label>
-      </InputWrapper>
-      <StyledBtn
-        type="submit"
-        className="button buttonBlue"
-        disabled={disabled}
-      >
-       SignUp
-      </StyledBtn>
-    </Form>
+  
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <InputWrapper>
+          {errors.username && <ErrorMsg>{errors.username.message}</ErrorMsg>}
+          <Input
+            autoComplete="off"
+            className={`${watch('username') ? 'filled' : ''}`}
+            type="text"
+            {...register('username', {
+              required: 'Name is required',
+              minLength: {
+                value: 3,
+                message: 'Name should be at least 3 characters',
+              },
+              maxLength: {
+                value: 25,
+                message: 'Name should not exceed 25 characters',
+              },
+            })}
+          />
+          <Label>User Name:</Label>
+        </InputWrapper>
+        <InputWrapper>
+          {errors.password && <ErrorMsg>{errors.password.message}</ErrorMsg>}
+          <Input
+            autoComplete="off"
+            className={`${watch('password') ? 'filled' : ''}`}
+            type="password"
+            {...register('password', {
+              required: 'Password is required',
+              minLength: {
+                value: 8,
+                message: 'Password should be at least 3 characters',
+              },
+      
+            })}
+          />
+          <Label>Password:</Label>
+        </InputWrapper>
+        <StyledBtn
+          type="submit"
+          className="button buttonBlue"
+          disabled={disabled}
+        >
+         SignUp
+        </StyledBtn>
+      
+      </Form>
+ 
   );
 };
