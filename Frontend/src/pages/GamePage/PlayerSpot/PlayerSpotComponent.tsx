@@ -69,7 +69,10 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
       game.player?.canBetAtThisSpot(id) &&
       !gameTable?.roundIsStarted
     ) {
+      
       game.emit[SocketEmit.SetBet](id);
+      console.log("Button value here is", gameTable.currentBetBtnValue);
+      console.log("Table id here is ", game.table?.id);
     }
   };
 

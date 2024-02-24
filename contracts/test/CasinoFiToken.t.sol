@@ -11,7 +11,7 @@ contract CasinoFiTokenTest is Test {
     CasinoFiToken public casinoFiToken;
     address public OWNER = makeAddr("owner");
     address public PLAYER1 = makeAddr("player1");
-    uint256 public EARLY_ACCESS_REWARD = 100;
+    uint256 public EARLY_ACCESS_REWARD = 100e18;
 
 
     function setUp () public {
@@ -24,10 +24,10 @@ contract CasinoFiTokenTest is Test {
       assert(ownerBalance == totalTokenOwnerHolding);
     }
 
-    function test_tokens_contract_holding_is_correct() public view {
+    function test_tokens_contract_holding_is_correct() public  {
         uint256 contractBalance = IERC20(address(casinoFiToken)).balanceOf(address(casinoFiToken));
-        uint256 expectTotalToken = casinoFiToken.STAKING_REWARDS_SUPPLY() + casinoFiToken.BUYBACK_AND_BURN_SUPPLY();
-        assert(contractBalance == expectTotalToken);
+        uint256 expectTotalToken = casinoFiToken.STAKING_REWARDS_SUPPLY() + casinoFiToken.BUYBACK_AND_BURN_SUPPLY() + casinoFiToken.TREASURY_SUPPLY();
+        assertEq(contractBalance, expectTotalToken);
     }
 
     function test_can_mint_early_access_token() public  {
