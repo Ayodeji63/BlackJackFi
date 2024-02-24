@@ -15,6 +15,7 @@ interface User {
   isLoggedIn: boolean;
   userId: string;
   scwAddress?: string;
+  privateKey?: string;
 }
 
 interface AuthContextType {
@@ -58,6 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             isLoggedIn: true,
             userId: session.user.userId,
             scwAddress: session.user.profile.scwAddress,
+            privateKey: session.user.profile.pk
           };
           login(userInfo);
     navigate("/dashboard");
@@ -74,6 +76,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = (user: User) => {
     setUser(user);
   };
+
+  
 
 
   const logout = () => {

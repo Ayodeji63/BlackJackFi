@@ -4,7 +4,11 @@ pragma solidity ^0.8.18;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract CasinoFiBet {
+    error CasinoFiBet__InvalidAmount();
+
     event CasinoFiBet__SetBet(address indexed player, uint256 indexed betChip);
+    event CasinoFiBet__RemoveBet(address indexed to, uint256 indexed value);
+
     IERC20 public casinoFiToken;
     mapping (string tableId => mapping(address player => uint256 totalChips)) public tableBetChips;
 
@@ -14,7 +18,10 @@ contract CasinoFiBet {
 
     function setBet(string memory tableId, uint256 betChip) public {
         uint256 playerBalance = casinoFiToken.balanceOf(msg.sender);
-        require(playerBalance > betChip,"CasinoFiBet: Insufficient amount");
+        // require(playerBalance > betChip,"CasinoFiBet: Insufficient amount");
+        if (playerBalance < betChip) {
+            revert CasinoFiBet__InvalidAmount();
+        }
         tableBetChips[tableId][msg.sender] = tableBetChips[tableId][msg.sender] + betChip;
         casinoFiToken.transferFrom(msg.sender, address(this), betChip);
 
@@ -24,9 +31,16 @@ contract CasinoFiBet {
     function getTotalBetChips(string memory tableId) public view returns(uint256) {
         return tableBetChips[tableId][msg.sender];
     }
-
+    // CEI, Check Effect, Interactions
     function removeBet(string memory tableId, uint256 betChip) public {
+        uint256 playerChip = tableBetChips[tableId][msg.sender];
+        // require(playerChip >= betChip, "CasinoFiBet: Insufficient amount");
+        if (playerChip < betChip) {
+            revert CasinoFiBet__InvalidAmount();
+        }
         tableBetChips[tableId][msg.sender] = tableBetChips[tableId][msg.sender] - betChip;
-        
+        emit CasinoFiBet__RemoveBet(msg.sender, betChip);
+        casinoFiToken.transfer(msg.sender, betChip);
+
     }
 }

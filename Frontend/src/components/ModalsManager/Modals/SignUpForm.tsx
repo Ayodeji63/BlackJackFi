@@ -51,8 +51,8 @@ export const SignUpForm: React.FC = () => {
   const navigate = useNavigate();
 
   const ALCHEMY_API_URL = `https://eth-sepolia.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`;
-  const AA_APIKEY = String(process.env.REACT_APP_ARB_API_KEY);
-  const chain = arbitrumSepolia;
+  const AA_APIKEY = String(process.env.REACT_APP_POLYGON_API_KEY);
+  const chain = polygonMumbai;
 
   const ENTRYPOINT_ADDRESS = process.env
   .SEPOLIA_ENTRYPOINT_ADDRESS as `0x${string}`;
@@ -67,7 +67,7 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
     }
     setDisabled(false);
   }, [user])
-
+  // "0xfeC9b3325A31a38E17140D0Cb248E10a58EBe3aD"
   
   const handleSignup = async (username: string, password: string) => {
       try {
@@ -83,7 +83,7 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
           chain,
           signer,
           gasManagerConfig: {
-            policyId: String(process.env.REACT_APP_ARB_POLICY_ID)
+            policyId: String(process.env.REACT_APP_POLYGON_POLICY_ID)
           }
         });
         const userScwAddress = provider.getAddress();
@@ -105,6 +105,7 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
           isLoggedIn: true, 
           userId: response2.userId,
           scwAddress: userScwAddress,
+          privateKey: privKeyHex
         };
         login(userInfo);
 

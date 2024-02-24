@@ -38,7 +38,7 @@ anvil :; anvil -m 'test test test test test test test test test test test junk' 
 NETWORK_ARGS := --rpc-url http://localhost:8545 --private-key $(DEFAULT_ANVIL_KEY) --broadcast
 
 ifeq ($(findstring --network polygon,$(ARGS)),--network polygon)
-	NETWORK_ARGS := --rpc-url $(POLYGON_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --verify --etherscan-api-key $(POLYGON_RPC_URL) -vvvv --legacy
+	NETWORK_ARGS := --rpc-url $(POLYGON_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --verify --etherscan-api-key $(POLYGON_API_KEY) -vvvv --legacy
 endif
 
 ifeq ($(findstring --network arb,$(ARGS)),--network arb)
@@ -47,6 +47,9 @@ endif
 
 deploy:
 	@forge script script/DeployCasinoFiToken.s.sol:DeployCasinoFiToken $(NETWORK_ARGS) 
+
+deployCasinoFiBet:
+	@forge script script/DeployCasinoFiToken.s.sol:DeployCasinoFiBet $(NETWORK_ARGS)
 
 deployPaymaster:
 	@forge script script/DeployPaymaster.s.sol:DeployPaymaster $(NETWORK_ARGS) 

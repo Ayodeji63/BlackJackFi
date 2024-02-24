@@ -13,6 +13,7 @@ contract CasinoFiBetTest is Test {
     address public PLAYER = makeAddr("player");
     string public tableID = "959ac166-a0d7-45af-92a7-e61f0b4b46b0";
     uint256 public BET_CHIP = 20e18;
+    uint256 public EARLY_ACCESS_AMOUNT = 100e18;
 
 
     function setUp() public {
@@ -48,6 +49,22 @@ contract CasinoFiBetTest is Test {
         uint256 playerBalance = casinoFiToken.balanceOf(PLAYER);
         uint256 expectedPlayerBalance = 80e18;
         assert(playerBalance == expectedPlayerBalance);
+        vm.stopPrank();
+    }
+
+    function test_can_remove_bet() public _setBet {
+        vm.startPrank(PLAYER);
+        casinofiBet.removeBet(tableID, BET_CHIP);
+        uint256 balance = casinoFiToken.balanceOf(PLAYER);
+        assertEq(balance, EARLY_ACCESS_AMOUNT);
+        vm.stopPrank();
+    }
+
+    function test_player_chip_should_be_zero() public _setBet {
+        vm.startPrank(PLAYER);
+        casinofiBet.removeBet(tableID, BET_CHIP);
+        uint256 totalChips = casinofiBet.getTotalBetChips(tableID);
+        assertEq(totalChips, 0);
         vm.stopPrank();
     }
 }
