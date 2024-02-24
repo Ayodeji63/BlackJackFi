@@ -81,7 +81,7 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
     try {
       console.log('Private key', user?.privateKey);
       console.log('Api key', AA_APIKEY);
-      const privateKey = user?.privateKey ?? ''; // default to an empty string if user?.privateKey is undefined
+      const privateKey = user?.privateKey ?? ''; 
       const signer = LocalAccountSigner.privateKeyToAccountSigner(`0x${privateKey}`);
       
       const providerConfig = {
@@ -100,23 +100,38 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
 
     
       console.log("Provider is", provider.getAddress());
+      const betContractAddress = process.env.REACT_APP_CASINOFI_BET_ADDRESS as `0x${string}`;
+      const tokenAddress = process.env.REACT_APP_CASINOFI_TOKEN_ADDRESS_ARB as `0x${string}`;
 
-
-      const data = encodeFunctionData({
+      const data1 = encodeFunctionData({
         abi: casinoFiBetAbi,
         functionName: "setBet",
-        args: [tableId, Number(betChip)]
+        args: [String(tableId), parseEther(String(betChip))]
       });
 
-      const contractAddress = process.env.REACT_APP_CASINOFI_BET_ADDRESS as `0x${string}`;
+      const data2 = encodeFunctionData({
+        abi: casinoFiAbi,
+        functionName: "approve",
+        args: [betContractAddress, parseEther(String(betChip))]
+      })
+
+      // const contractAddress = process.env.REACT_APP_CASINOFI_TOKEN_ADDRESS_ARB as `0x${string}`;
       const amountToSend: bigint = parseEther("0")
 
       const { hash: uoHash } = await provider.sendUserOperation({
-        uo: {
-          target: "0x21f52de7Fe9c96ADf7c7E6480Dc6b23Cbee4ee2C", // The desired target contract address
-          data: data, // The desired call data
-          value: amountToSend, // (Optional) value to send the target contract address
-        },
+        uo: [
+          {
+            target: tokenAddress,
+            data: data2,
+            value: amountToSend
+          },
+          {
+            target: betContractAddress, // The desired target contract address
+            data: data1, // The desired call data
+            value: amountToSend, // (Optional) value to send the target contract address
+          }
+         
+        ]
       });
       
       console.log(uoHash); // Log the transaction hash

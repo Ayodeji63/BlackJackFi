@@ -14,6 +14,13 @@ import { Player } from '../../../store/player';
 import { SocketEmit } from '../../../types.ds';
 import { game } from '../../../store/game';
 import { Bet } from '../BetPanel/Bet';
+import { useAuth } from '../../../utils/common/AuthProvider';
+import { LocalAccountSigner } from '@alchemy/aa-core';
+import { createLightAccountAlchemyClient } from '@alchemy/aa-alchemy';
+import { encodeFunctionData, parseEther } from 'viem';
+import casinoFiBetAbi from "../../../CasinoFiBet.json"
+import { polygonMumbai, arbitrumSepolia, type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
+import casinoFiAbi from "../../../CasinoFiToken.json";
 
 type PlayerComponentProps = {
   player: Player;
@@ -21,13 +28,61 @@ type PlayerComponentProps = {
 };
 export const PlayerComponent: React.FC<PlayerComponentProps> = observer(
   ({ player, spotId }) => {
+
+    const {user} = useAuth();
+
+    const removeBet = async (tableId: string, betChip: number) =>{
+      try {
+        const AA_APIKEY = String(process.env.REACT_APP_POLYGON_API_KEY);
+        const chain = polygonMumbai;
+      const privateKey = user?.privateKey ?? ''; 
+        const signer = LocalAccountSigner.privateKeyToAccountSigner(`0x${privateKey}`);
+      const betContractAddress = process.env.REACT_APP_CASINOFI_BET_ADDRESS as `0x${string}`;
+
+        const providerConfig = {
+          apiKey: AA_APIKEY,
+          chain,
+          signer,
+          gasManagerConfig: {
+            policyId: String(process.env.REACT_APP_POLYGON_POLICY_ID)
+          }
+        };
+        
+        console.log(providerConfig); // Debug: Log the configuration object
+        
+        const provider = await createLightAccountAlchemyClient(providerConfig);
+
+        const data1 = encodeFunctionData({
+          abi: casinoFiBetAbi,
+          functionName: "removeBet",
+          args: [tableId, parseEther(String(betChip))]
+        });
+
+        const amountToSend: bigint = parseEther("0");
+
+        const {hash: uoHash} = await provider.sendUserOperation({
+          uo: {
+            target: betContractAddress,
+            data: data1,
+            value: amountToSend
+          }
+        });
+
+      console.log(uoHash); // Log the transaction hash
+
+      } catch (e) {
+        console.log(e)
+      }
+    }
     const handleRemoveBet = useCallback(
-      (index: number) => (e: MouseEvent<HTMLElement>) => {
+      (index: number, bet: number) => async (e: MouseEvent<HTMLElement>) => {
         e.stopPropagation();
         if (
           !game.table?.roundIsStarted &&
           game.player?.canBetAtThisSpot(spotId)
         ) {
+          const TableId = game?.table?.id ? game?.table?.id : '';
+         await removeBet(TableId, bet);
           game.emit[SocketEmit.RemoveBet](player.id, index);
         }
       },
@@ -58,7 +113,7 @@ export const PlayerComponent: React.FC<PlayerComponentProps> = observer(
               <Bet
                 key={`${player}-bet${index}-${bet}`}
                 value={bet}
-                onBetSet={handleRemoveBet(index)}
+                onBetSet={handleRemoveBet(index, bet)}
                 color={getBetColor(bet)}
                 size={5.5}
                 active={false}
