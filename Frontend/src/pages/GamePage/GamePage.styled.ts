@@ -36,7 +36,7 @@ export const BalanceStyled = styled.div`
   top: 20px;
   left: 20px;
   div::after {
-    content: '$';
+    content: ' CFT';
   }
 `;
 

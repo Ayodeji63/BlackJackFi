@@ -22,7 +22,7 @@ import {
   Label,
   Form,
 } from '../ModalsManager.styled';
-import { SocketEmit, SocketOn } from '../../../types.ds';
+import { ModalTypes, SocketEmit, SocketOn } from '../../../types.ds';
 import { StyledBtn } from '../../App/App.styled';
 import { socket } from '../../../server/socket';
 import { game } from '../../../store/game';
@@ -35,7 +35,7 @@ interface FormValues {
   password: string;
 }
 
-export const SignUpForm: React.FC = () => {
+export const LoginForm: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -79,14 +79,19 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
         login(userInfo);
         if (user?.isLoggedIn) {
             navigate("/dashboard");
-            console.log(`Userbase login succesful. ✅ Welcome, ${username}!`);
+            console.log(`Userbase login succesful on Login page. ✅ Welcome, ${username}!`);
         }
 
       } catch (error) {
-        alert(error);
+        console.log(error);
         
       }
     }
+
+  const gotoSignUp = () => {
+    game.modalUpdate(false, ModalTypes.SignUp);
+
+  }
 
   // const onSubmit = useCallback(
   //   (data: FormValues) => {
@@ -140,6 +145,8 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
         >
          Log In
         </StyledBtn>
+
+        <p className='cursor-pointer mt-4 text-blue-200' onClick={gotoSignUp}>Create An Account</p>
       
       </Form>
       

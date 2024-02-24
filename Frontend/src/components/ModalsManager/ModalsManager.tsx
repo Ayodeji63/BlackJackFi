@@ -10,6 +10,7 @@ import { EnterForm } from './Modals/EnterForm';
 import { game } from '../../store/game';
 import { Chat } from './Chat/Chat';
 import { SignUpForm } from "./Modals/SignUpForm";
+import { LoginForm } from './Modals/LoginForm';
 
 const MODAL_COMPONENTS = {
   [ModalTypes.CreateOrJoin]: EnterForm,
@@ -18,6 +19,7 @@ const MODAL_COMPONENTS = {
   [ModalTypes.Chat]: Chat,
   [ModalTypes.Sounds]: SoundSettingsForm,
   [ModalTypes.SignUp]: SignUpForm,
+  [ModalTypes.LogIn]: LoginForm
 };
 
 export const ModalsManager: React.FC = observer(() => {

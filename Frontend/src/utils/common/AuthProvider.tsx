@@ -4,8 +4,11 @@ import React, {
   useContext,
   useEffect,
   useState,
+  
 } from "react";
+import { useNavigate } from "react-router-dom";
 import userbase from "userbase-js";
+import { game } from "../../store/game";
 
 interface User {
   username: string;
@@ -35,6 +38,7 @@ interface AuthProviderProps {
 }
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
   useEffect(() => {
     userbase
       .init({
@@ -56,6 +60,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
             scwAddress: session.user.profile.scwAddress,
           };
           login(userInfo);
+    navigate("/dashboard");
+    game.modalUpdate(true);
+
           console.log(
             "Logged out in the authprovider, here is the user " + user?.username
           );
@@ -67,6 +74,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = (user: User) => {
     setUser(user);
   };
+
 
   const logout = () => {
     setUser(null);
