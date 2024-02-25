@@ -11,6 +11,7 @@ import { formatEther } from 'viem';
 import { socket } from '../../server/socket';
 import { ChecboxInput, CheckboxInputWrapper, CheckboxLabel, ErrorMsg, Input, InputWrapper, Label, Form } from '../../components/ModalsManager/ModalsManager.styled';
 import { useForm } from 'react-hook-form';
+import { Wrapper } from '../GamePage/GamePage.styled';
 
 interface FormValues {
   joinExistingTable: boolean;
@@ -136,70 +137,75 @@ export const Dashboard: React.FC = () => {
       [onJoinTable]
     )
   return (
-    <div className='w-full h-full'>
+    <Wrapper>
+      <div className='w-full h-full'>
         <header className='w-full flex justify-around p-5'>
-            <div>Dashboard</div>
+            <div className='text-3xl'>CasinoFi</div>
             <div>
                 <p>Username: {user?.username}</p>
-                <p>UserWallet Address: {user?.scwAddress}</p>
-                <p>User Balance: {userBalance} CFT</p>
-                <StyledBtn
+                <p>Address: {user?.scwAddress}</p>
+                <p>Balance: {userBalance} CFT</p>
+                
+            </div>
+            <StyledBtn
         type="submit"
         className="button buttonBlue"
         onClick={handleLogout}
       >
        Logout
       </StyledBtn>
-            </div>
-
         </header>
 
-        <section>
-        <StyledBtn
-        type="submit"
-        onClick={() => createTable()}
-        className="button buttonBlue"
-      >
-        Create Table
-      </StyledBtn>
-
-      <Form onSubmit={handleSubmit(onSubmit)}>
-      <CheckboxInputWrapper>
-      <ChecboxInput 
-      id="checkbox"
-      type='checkbox'
-      className='checkbox-input'
-      {...register('joinExistingTable')} 
-      />
-      <label className='fake-check' htmlFor='checkbox'></label>
-      <CheckboxLabel>Join existing table</CheckboxLabel>
-      </CheckboxInputWrapper>
-      {watch('joinExistingTable') && (
-        <InputWrapper>
-        {errors.tableId && <ErrorMsg>{errors.tableId.message}</ErrorMsg>}
-        <Input 
-        autoComplete="off"
-        className={`${watch('tableId') ? 'filled' : ''}`}
-        type='text'
-        {...register('tableId', {
-          required: 'Table ID is required', 
-        })}
-
-        />
-        <Label>Table Id:</Label>
-        </InputWrapper>
-      )}
-      <StyledBtn
-        type="submit"
-        className="button buttonBlue"
-      >
-        Join Table
-      </StyledBtn>
-      </Form>
+        <section className='flex w-full flex-col items-center justify-center'>
+        <h1 className='text-2xl mb-8 mt-10'>BlackJack Game</h1>
+        <div className='flex w-full justify-evenly'>
+          <Form onSubmit={handleSubmit(createTable)}>
+          <StyledBtn
+          type="submit"
+          className="button buttonBlue"
+                >
+          Create Table
+                </StyledBtn>
+          </Form>
+          
+                <Form onSubmit={handleSubmit(onSubmit)}>
+                <CheckboxInputWrapper>
+                <ChecboxInput 
+                id="checkbox"
+                type='checkbox'
+                className='checkbox-input'
+                {...register('joinExistingTable')} 
+                />
+                <label className='fake-check' htmlFor='checkbox'></label>
+                <CheckboxLabel>Join existing table</CheckboxLabel>
+                </CheckboxInputWrapper>
+                {watch('joinExistingTable') && (
+          <InputWrapper>
+          {errors.tableId && <ErrorMsg>{errors.tableId.message}</ErrorMsg>}
+          <Input
+          autoComplete="off"
+          className={`${watch('tableId') ? 'filled' : ''}`}
+          type='text'
+          {...register('tableId', {
+            required: 'Table ID is required',
+          })}
+          />
+          <Label>Table Id:</Label>
+          </InputWrapper>
+                )}
+                <StyledBtn
+          type="submit"
+          className="button buttonBlue"
+                >
+          Join Table
+                </StyledBtn>
+                </Form>
+        </div>
 
 
     
         </section>
     </div>
+    </Wrapper>
   )
 }
