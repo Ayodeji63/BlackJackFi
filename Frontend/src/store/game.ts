@@ -25,6 +25,9 @@ import { Music } from './music';
 import { Card } from './card';
 import { Chat } from './chat';
 import { Table } from './table';
+import { publicClient, walletClient, account } from '../utils/client';
+import { Hex } from '@alchemy/aa-core';
+import casinoFiBetAbi from "../CasinoFiBet.json"
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
@@ -198,6 +201,12 @@ export class Game {
         this.modalUpdate(true);
       }
     });
+
+    // socket.on(SocketOn.GameEnded, (Player) => {
+    //   if (this.player?.isWin) {
+    //     this.handleWinAndLoss();
+    //   }
+    // })
   }
 
   @computed public get gameIsReady(): boolean {
@@ -259,6 +268,21 @@ export class Game {
     } else {
       return '';
     }
+  }
+
+  @action.bound public async handleWinAndLoss(value: number, address: string, tableId: string): Promise<void> {
+    console.log(`Handle Win And Loss called with value: ${value}`);
+    console.log("Sending Transaction.......");
+    const {request} = await publicClient.simulateContract({
+          address: "0x5DBA5a9b04F8DE9f2Cc4e1868C6e43C8bB430dC7",
+          abi: casinoFiBetAbi,
+          functionName: 'handleWinAndLoose',
+          args: [value, tableId, address],
+          account
+        })
+      const tx =  await walletClient.sendTransaction(request);
+      console.log("Transactions", tx);
+      console.log("Transaction Sent.......");      
   }
 
   private handleAdditionalStand() {

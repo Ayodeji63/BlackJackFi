@@ -25,9 +25,21 @@ import chatIcon from '../../assets/chat.svg';
 import copyIcon from '../../assets/copy.svg';
 import { game } from '../../store/game';
 import { Deck } from './Deck/Deck';
+import casinoFiAbi from "../../CasinoFiBet.json"
+import { createWalletClient, encodeFunctionData, http, parseEther } from "viem";
+import casinoFiBetAbi from "../../CasinoFiBet.json";
+import { walletClient, account, publicClient } from "../../utils/client";
+import { Player } from '../../store/player';
+import { useAuth } from '../../utils/common/AuthProvider';
+import { Hex, LocalAccountSigner, baseSepolia } from '@alchemy/aa-core';
+import { createLightAccountAlchemyClient } from '@alchemy/aa-alchemy';
+
+
 
 export const GamePage: React.FC = observer(() => {
   const navigate = useNavigate();
+  const {user} = useAuth();
+
 
   useEffect(() => {
     if (!(game.table && game.player)) {
@@ -36,12 +48,60 @@ export const GamePage: React.FC = observer(() => {
     }
   }, [navigate]);
 
-  useEffect(() => {
-    if (game.player?.roundIsEnded) {
-      game.modalUpdate(false, ModalTypes.GameEnd);
+ async function getTransactionCount() {
+    const transactionCount = await publicClient.getTransactionCount({  
+      address: account.address,
+    })
+    return transactionCount;
+  }
+
+  const handleWinOrLoose = async () => {
+    try {
+      const AA_APIKEY = String(process.env.REACT_APP_BASE_SEPOLIA_API_KEY);
+  const chain = baseSepolia;
+      const privateKey = user?.privateKey ?? ''; 
+      const signer = LocalAccountSigner.privateKeyToAccountSigner(`0x${privateKey}`);
+      
+      const providerConfig = {
+        apiKey: AA_APIKEY,
+        chain,
+        signer,
+        gasManagerConfig: {
+          policyId: String(process.env.REACT_APP_BASE_SEPOLIA_POLICY_ID)
+        }
+      };
+
+      const provider = await createLightAccountAlchemyClient(providerConfig);
+      const status = game.player?.isWin ? 0 : 1;
+      const tableId = game.table?.id || '';
+      const data1 = encodeFunctionData({
+        abi: casinoFiBetAbi,
+        functionName: "handleWinAndLoose",
+        args: [status, tableId, user?.scwAddress]
+      });
+
+      const amountToSend: bigint = parseEther("0");
+      const betContractAddress = process.env.REACT_APP_CASINOFI_BET_ADDRESS as `0x${string}`;
+
+      const { hash: uoHash } = await provider.sendUserOperation({
+        uo: {
+          target: betContractAddress,
+          data: data1
+        }
+      });
+      console.log(uoHash);
+    } catch (e) {
+      console.log(e);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [game.player?.roundIsEnded]);
+  }
+    useEffect(() => {
+      if (game.player?.roundIsEnded) {
+        handleWinOrLoose()
+        game.modalUpdate(false, ModalTypes.GameEnd); 
+      } 
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [game.player?.roundIsEnded]);
+    
 
   const handlePlayBtn = () => {
     game.emit[SocketEmit.Deal]();

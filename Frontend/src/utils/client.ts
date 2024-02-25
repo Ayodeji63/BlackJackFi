@@ -14,4 +14,4 @@ export const walletClient = createWalletClient({
   transport: http(), 
 });
 
-export const account = privateKeyToAccount(process.env.REACT_APP_PRIVATE_KEY as `0x${string}`);
+export const account = privateKeyToAccount(`0x${process.env.REACT_APP_PRIVATE_KEY}`);

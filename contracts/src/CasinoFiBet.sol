@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.18;
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {CasinoFiToken} from "./CasinoFiToken.sol";
 
-contract CasinoFiBet is Ownable {
+contract CasinoFiBet  {
     error CasinoFiBet__InvalidAmount();
     error CasinoFiBet__InvalidPlayer();
 
@@ -22,7 +21,7 @@ contract CasinoFiBet is Ownable {
     uint256 public constant TABLE_FEE = 5; // 5% tax on win
     address public immutable i_dealer;
 
-    constructor(address _casinoFiToken, address dealer) Ownable(dealer) {
+    constructor(address _casinoFiToken, address dealer) {
         casinoFiToken = CasinoFiToken(_casinoFiToken);
         i_dealer = dealer;
     }
@@ -48,7 +47,7 @@ contract CasinoFiBet is Ownable {
         casinoFiToken.transfer(msg.sender, betChip);
     }
 
-    function handleWinAndLoose(PlayerStatus status, string memory tableId, address player) public onlyOwner {
+    function handleWinAndLoose(PlayerStatus status, string memory tableId, address player) public {
         uint256 playerChips = tableBetChips[tableId][player];
         if (playerChips < 0) {
             revert CasinoFiBet__InvalidPlayer();

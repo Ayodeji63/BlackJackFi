@@ -1,4 +1,4 @@
-import React, { useCallback, MouseEvent, useRef } from 'react';
+import React, { useCallback, MouseEvent, useRef, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import {
@@ -11,7 +11,7 @@ import { getBetColor } from '../../../utils/getBetColor';
 import { CardComponent } from '../Card/CardComponent';
 import { Color } from '../../../constants/constants';
 import { Player } from '../../../store/player';
-import { SocketEmit } from '../../../types.ds';
+import { SocketEmit, SocketOn } from '../../../types.ds';
 import { game } from '../../../store/game';
 import { Bet } from '../BetPanel/Bet';
 import { useAuth } from '../../../utils/common/AuthProvider';
@@ -21,6 +21,9 @@ import { encodeFunctionData, parseEther } from 'viem';
 import casinoFiBetAbi from "../../../CasinoFiBet.json"
 import { polygonMumbai, baseSepolia, arbitrumSepolia, type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
 import casinoFiAbi from "../../../CasinoFiToken.json";
+import { createWalletClient, http } from "viem";
+import { walletClient, account, publicClient } from "../../../utils/client";
+import { socket } from '../../../server/socket';
 
 type PlayerComponentProps = {
   player: Player;
@@ -88,6 +91,9 @@ export const PlayerComponent: React.FC<PlayerComponentProps> = observer(
       },
       [player.id, spotId]
     );
+    
+   
+
 
     const cardRef = useRef<HTMLDivElement>(null);
     const activeClassName =

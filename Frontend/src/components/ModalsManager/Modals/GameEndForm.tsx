@@ -20,12 +20,12 @@ export const GameEndForm: React.FC = () => {
   return (
     <Form onSubmit={handleFormSubmit}>
       <ButtonsWrapper>
-        <StyledBtnWithSound
+        {/* <StyledBtnWithSound
           soundType={SoundType.Chip}
           onClick={handleEndGame(EndGameActions.Rebet)}
         >
           rebet
-        </StyledBtnWithSound>
+        </StyledBtnWithSound> */}
         <StyledBtnWithSound
           soundType={SoundType.Click}
           onClick={handleEndGame(EndGameActions.NewBet)}

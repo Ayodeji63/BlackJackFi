@@ -62,8 +62,6 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
       player.state
     ) {
       className.push('win');
-      console.log('player won');
-      console.log("Player status", player.isWin);
 
     }
     if (
@@ -72,9 +70,6 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
       player.state
     ) {
       className.push('loose');
-      console.log('player loose');
-      console.log("Player status", player.isWin);
-
 
     }
     return className.join(' ');
@@ -83,25 +78,7 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
   const AA_APIKEY = String(process.env.REACT_APP_BASE_SEPOLIA_API_KEY);
   const chain = baseSepolia;
 
-  const handleWinAndLoss = async (player: Player) => {
-    try {
-      if (player.id == game.player?.id) {
-        console.log('player won');
-        console.log("Player status", player.isWin);
-        const {request} = await publicClient.simulateContract({
-          address: process.env.REACT_APP_CASINOFI_BET_ADDRESS as `0x${string}`,
-          abi: casinoFiAbi,
-          functionName: 'handleWinAndLoose',
-          args: [0],
-          account
-        })
-  
-        await walletClient.sendTransaction(request);
-      }
-        } catch (e) {
-          console.log(e)
-        }
-  }
+ 
   
   const setBet = async (tableId: unknown, betChip: unknown) => {
     try {

@@ -6,7 +6,7 @@ import { SocketOn } from '../types.ds';
 
 import { io } from 'socket.io-client';
 
-const socketWithoutTypes: Socket = io('http://localhost:5000');
+const socketWithoutTypes: Socket = io(`${process.env.REACT_APP_SERVER_URL}`);
 
 interface SocketEventsOn {
   [SocketOn.TableCreated]: (
