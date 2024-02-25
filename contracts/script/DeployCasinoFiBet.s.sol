@@ -7,20 +7,6 @@ import {Script} from "forge-std/Script.sol";
 import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
 
 
-
-contract DeployCasinoFiToken is Script {
-
-     address public initOwner = vm.addr(vm.envUint("OP_PRIVATE_KEY"));
-
-    CasinoFiToken public casinoFiToken;
-
-    function run() public  {
-        vm.startBroadcast(initOwner);
-        casinoFiToken = new CasinoFiToken(initOwner);
-        vm.stopBroadcast();
-    }
-}
-
 contract DeployCasinoFiBet is Script {
     address public initOwner = vm.addr(vm.envUint("OP_PRIVATE_KEY"));
     
@@ -33,7 +19,7 @@ contract DeployCasinoFiBet is Script {
             block.chainid
         );
         vm.startBroadcast(initOwner);
-        casinoFiBet = new CasinoFiBet(0x6687B7aA487B103637C943447220DaA5Fc614fB7, initOwner);
+        casinoFiBet = new CasinoFiBet(casinoFiTokenAddress, initOwner);
         vm.stopBroadcast();
     }
 }

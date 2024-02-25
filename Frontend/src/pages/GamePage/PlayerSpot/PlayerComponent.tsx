@@ -19,7 +19,7 @@ import { LocalAccountSigner } from '@alchemy/aa-core';
 import { createLightAccountAlchemyClient } from '@alchemy/aa-alchemy';
 import { encodeFunctionData, parseEther } from 'viem';
 import casinoFiBetAbi from "../../../CasinoFiBet.json"
-import { polygonMumbai, arbitrumSepolia, type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
+import { polygonMumbai, baseSepolia, arbitrumSepolia, type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
 import casinoFiAbi from "../../../CasinoFiToken.json";
 
 type PlayerComponentProps = {
@@ -33,8 +33,8 @@ export const PlayerComponent: React.FC<PlayerComponentProps> = observer(
 
     const removeBet = async (tableId: string, betChip: number) =>{
       try {
-        const AA_APIKEY = String(process.env.REACT_APP_POLYGON_API_KEY);
-        const chain = polygonMumbai;
+        const AA_APIKEY = String(process.env.REACT_APP_BASE_SEPOLIA_API_KEY);
+        const chain = baseSepolia;
       const privateKey = user?.privateKey ?? ''; 
         const signer = LocalAccountSigner.privateKeyToAccountSigner(`0x${privateKey}`);
       const betContractAddress = process.env.REACT_APP_CASINOFI_BET_ADDRESS as `0x${string}`;
@@ -44,7 +44,7 @@ export const PlayerComponent: React.FC<PlayerComponentProps> = observer(
           chain,
           signer,
           gasManagerConfig: {
-            policyId: String(process.env.REACT_APP_POLYGON_POLICY_ID)
+            policyId: String(process.env.REACT_APP_BASE_SEPOLIA_POLICY_ID)
           }
         };
         

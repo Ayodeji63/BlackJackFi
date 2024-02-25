@@ -145,7 +145,7 @@ export const GamePage: React.FC = observer(() => {
       </OptionsPanel>
       <BalanceStyled>
         <div>{game.player?.balance}</div>
-        {topUpBalanceBtn}
+        {/* {topUpBalanceBtn} */}
       </BalanceStyled>
 
       <GameWrapper>

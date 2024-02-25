@@ -17,9 +17,10 @@ import { LocalAccountSigner } from '@alchemy/aa-core';
 import { createLightAccountAlchemyClient } from '@alchemy/aa-alchemy';
 import { encodeFunctionData, parseEther } from 'viem';
 import casinoFiBetAbi from "../../../CasinoFiBet.json"
-import { polygonMumbai, arbitrumSepolia, type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
+import { polygonMumbai,baseSepolia, arbitrumSepolia, type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
 import casinoFiAbi from "../../../CasinoFiToken.json";
-
+import { createWalletClient, http } from "viem";
+import { walletClient, account, publicClient } from "../../../utils/client";
 
 type PlayerProps = {
   id: string;
@@ -61,6 +62,9 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
       player.state
     ) {
       className.push('win');
+      console.log('player won');
+      console.log("Player status", player.isWin);
+
     }
     if (
       (player.state === PlayerGameState.Loose ||
@@ -68,15 +72,37 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
       player.state
     ) {
       className.push('loose');
+      console.log('player loose');
+      console.log("Player status", player.isWin);
+
+
     }
     return className.join(' ');
   };
 
-  const AA_APIKEY = String(process.env.REACT_APP_POLYGON_API_KEY);
-  const chain = polygonMumbai;
+  const AA_APIKEY = String(process.env.REACT_APP_BASE_SEPOLIA_API_KEY);
+  const chain = baseSepolia;
 
-
-
+  const handleWinAndLoss = async (player: Player) => {
+    try {
+      if (player.id == game.player?.id) {
+        console.log('player won');
+        console.log("Player status", player.isWin);
+        const {request} = await publicClient.simulateContract({
+          address: process.env.REACT_APP_CASINOFI_BET_ADDRESS as `0x${string}`,
+          abi: casinoFiAbi,
+          functionName: 'handleWinAndLoose',
+          args: [0],
+          account
+        })
+  
+        await walletClient.sendTransaction(request);
+      }
+        } catch (e) {
+          console.log(e)
+        }
+  }
+  
   const setBet = async (tableId: unknown, betChip: unknown) => {
     try {
       console.log('Private key', user?.privateKey);
@@ -89,7 +115,7 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
         chain,
         signer,
         gasManagerConfig: {
-          policyId: String(process.env.REACT_APP_POLYGON_POLICY_ID)
+          policyId: String(process.env.REACT_APP_BASE_SEPOLIA_POLICY_ID)
         }
       };
       
@@ -148,6 +174,7 @@ export const PlayerSpotComponent: React.FC<PlayerProps> = observer(({ id }) => {
     ) {
       
       await setBet(game.table?.id, gameTable.currentBetBtnValue);
+
       game.emit[SocketEmit.SetBet](id);
       console.log("Button value here is", gameTable.currentBetBtnValue);
       console.log("Table id here is ", game.table?.id);

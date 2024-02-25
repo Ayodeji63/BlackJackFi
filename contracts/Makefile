@@ -45,14 +45,21 @@ ifeq ($(findstring --network arb,$(ARGS)),--network arb)
 	NETWORK_ARGS := --rpc-url $(ARB_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --verify --etherscan-api-key $(ARB_API_KEY) -vvvv
 endif
 
+ifeq ($(findstring --network baseSep,$(ARGS)),--network baseSep)
+	NETWORK_ARGS := --rpc-url $(BASE_SEP_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --verify --etherscan-api-key $(BASE_API_KEY) -vvvv
+endif
+
 deploy:
 	@forge script script/DeployCasinoFiToken.s.sol:DeployCasinoFiToken $(NETWORK_ARGS) 
 
 deployCasinoFiBet:
-	@forge script script/DeployCasinoFiToken.s.sol:DeployCasinoFiBet $(NETWORK_ARGS)
+	@forge script script/DeployCasinoFiBet.s.sol:DeployCasinoFiBet $(NETWORK_ARGS)
 
 deployPaymaster:
 	@forge script script/DeployPaymaster.s.sol:DeployPaymaster $(NETWORK_ARGS) 
+
+mint:
+	@forge script script/Interactions.s.sol:MintCasinoFiBetPool $(NETWORK_ARGS)
 
 
 

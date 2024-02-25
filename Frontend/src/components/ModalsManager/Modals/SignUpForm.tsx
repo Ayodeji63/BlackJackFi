@@ -9,7 +9,7 @@ import { publicClient } from '../../../utils/client';
 import simpleFactoryAbi from '../../../utils/SimpleAccountFactory.json';
 import axios from 'axios';
 import { createLightAccountAlchemyClient } from "@alchemy/aa-alchemy";
-import { LocalAccountSigner, polygonMumbai, arbitrumSepolia, type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
+import { LocalAccountSigner, baseSepolia, polygonMumbai, arbitrumSepolia,  type Hex, UserOperationOverrides, SendUserOperationResult } from "@alchemy/aa-core";
 
 
 import {
@@ -51,8 +51,8 @@ export const SignUpForm: React.FC = () => {
   const navigate = useNavigate();
 
   const ALCHEMY_API_URL = `https://eth-sepolia.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_API_KEY}`;
-  const AA_APIKEY = String(process.env.REACT_APP_POLYGON_API_KEY);
-  const chain = polygonMumbai;
+  const AA_APIKEY = String(process.env.REACT_APP_BASE_SEPOLIA_API_KEY);
+  const chain = baseSepolia;
 
   const ENTRYPOINT_ADDRESS = process.env
   .SEPOLIA_ENTRYPOINT_ADDRESS as `0x${string}`;
@@ -83,7 +83,7 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = process.env
           chain,
           signer,
           gasManagerConfig: {
-            policyId: String(process.env.REACT_APP_POLYGON_POLICY_ID)
+            policyId: String(process.env.REACT_APP_BASE_SEPOLIA_POLICY_ID)
           }
         });
         const userScwAddress = provider.getAddress();

@@ -1,13 +1,29 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.18;
+import {Script} from "forge-std/Script.sol";
+import {CasinoFiBet} from "../src/CasinoFiBet.sol";
+import {CasinoFiToken} from "../src/CasinoFiToken.sol";
+import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
 
-contract Deposit {
-//       await entryPoint.depositTo(PM_ADDR, {
-//     value: hre.ethers.parseEther(".1"),
-//   });
-// 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789
-   function run() public {
+contract MintCasinoFiBetPool is Script {
 
-   }
+  address public initOwner = vm.addr(vm.envUint("OP_PRIVATE_KEY"));
+    
+
+    CasinoFiBet public casinoFiBet; 
+    
+    function run() public {
+        address casinoFiTokenAddress = DevOpsTools.get_most_recent_deployment(
+            "CasinoFiToken",
+            block.chainid
+        );
+         address casinoFiBetAddress = DevOpsTools.get_most_recent_deployment(
+            "CasinoFiBet",
+            block.chainid
+        );
+        vm.startBroadcast(initOwner);
+        CasinoFiToken(casinoFiTokenAddress).mintCasinoFiBetPool(casinoFiBetAddress);
+        vm.stopBroadcast();
+    }
 }
