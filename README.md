@@ -1,6 +1,8 @@
 # CasinoFi: Reinventing the Gaming Experience
 
-Welcome to CasinoFi, where excitement meets innovation in the world of multiplayer gaming. Built by a dedicated team during the thrilling GameFi challenge, CasinoFi takes gaming to new heights with a captivating blend of technology and entertainment.
+Welcome to CasinoFi, where excitement meets innovation in the world of multiplayer gaming. Built by a dedicated team during the thrilling GameFi challenge, CasinoFi takes gaming to new heights with a captivating blend of technology and entertainment, build on Base a Layer 2 Blockchain.
+
+### [CasinoFi-Website](https://black-jack-fi.vercel.app/)
 
 ## Overview
 
@@ -65,16 +67,27 @@ The CasinoFi community will have the power to propose and vote on governance dec
 
 ## Key Features
 
-1. **Blackjack at its Best:**
+1. **Account Abstraction: A Seamless Onboarding Experience:**
+CasinoFi takes pride in offering users a familiar web2 experience through Account Abstraction. Thanks to Alchemy API integration, users can seamlessly interact with the blockchain without the need for complex onboarding processes. Enjoy the convenience of your normal web2 experience while embracing the benefits of blockchain technology.
+
+2. **Scalability Through Batch Transactions**
+CasinoFi ensures scalability by leveraging batch transactions. This feature allows the platform to process multiple transactions in a single batch, enhancing efficiency and reducing congestion on the Ethereum network. Enjoy a scalable gaming experience without compromising on speed and responsiveness.
+
+3. **Off-Chain Computation for Enhanced User Experience**
+To deliver a superior gaming experience, CasinoFi strategically moves the computation of the Blackjack game off-chain. This approach ensures that users enjoy seamless gameplay with minimal latency. The result is a responsive, engaging, and immersive gaming experience that mirrors traditional casino gameplay.
+
+4. **Live Chat for Real-Time Interaction**
+CasinoFi understands the importance of community engagement. The platform features a live chat option, enabling users to interact in real-time, discuss strategies, and share the excitement of gaming. Connect with fellow players and experience the thrill of multiplayer gaming with the added element of social interaction.
+5. **Blackjack at its Best:**
    Experience the classic Blackjack game with a touch of modernity. Set your bets, hit, and stand – the core functionalities are implemented flawlessly.
 
-2. **Innovative Gameplay:**
+6. **Innovative Gameplay:**
    While some features like `Split`, Insurance, Staking, and Double are in the pipeline, CasinoFi already offers an exciting gaming experience with key functionalities.
 
-3. **Tech Stack:**
-   Built on a robust technology stack, including React + Typescript for the frontend, Express.js for the backend, and Solidity for the Smart Contract.
+7. **Tech Stack:**
+   Built on a robust technology stack, including React + Typescript for the frontend, Express.js, Socket.io for the backend, and Solidity for the Smart Contract.
 
-4. **Multiplayer Thrills:**
+8. **Multiplayer Thrills:**
    Immerse yourself in the multiplayer aspect of CasinoFi, connecting with players worldwide for a shared gaming adventure.
 
 ## Challenges Faced
@@ -104,7 +117,6 @@ While the current version of CasinoFi offers a taste of the casino experience, t
 2. **Install Dependencies:**
    ```
    cd BlackJackFi
-
    ```
 
 3. **Check the readMe of each Repo for proper development**
