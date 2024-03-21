@@ -49,6 +49,10 @@ ifeq ($(findstring --network baseSep,$(ARGS)),--network baseSep)
 	NETWORK_ARGS := --rpc-url $(BASE_SEP_RPC_URL) --private-key $(PRIVATE_KEY) --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvv
 endif
 
+ifeq ($(findstring --network bsc,$(ARGS)),--network bsc)
+	NETWORK_ARGS := --rpc-url $(RPC_TESTNET) --private-key $(PRIVATE_KEY) --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvv
+endif
+
 deploy:
 	@forge script script/DeployCasinoFiToken.s.sol:DeployCasinoFiToken $(NETWORK_ARGS) 
 
@@ -58,29 +62,8 @@ deployCasinoFiBet:
 deployPaymaster:
 	@forge script script/DeployPaymaster.s.sol:DeployPaymaster $(NETWORK_ARGS) 
 
-mint:
-	@forge script script/Interactions.s.sol:MintCasinoFiBetPool $(NETWORK_ARGS)
-
-verifyContract: 
-	@forge verify-contract \
-    --chain-id 84532 \
-    --num-of-optimizations 1000000 \
-    --watch \
-    --constructor-args $(cast abi-encode "constructor(address, address)" 0x430A863cC9A8B4B65e7cA085E62B9AAe3df80F2a 0xb1f540756bE3c06eBbcAC15d701C5477F271a7a0 ) \
-    --etherscan-api-key "55M4BYR6HE717WZY3RWG73QUSV1HT3HIUI" \
-    --compiler-version v0.8.18+commit.fc410830 \
-    0x5DBA5a9b04F8DE9f2Cc4e1868C6e43C8bB430dC7 \
-    src/CasinoFiBet.sol:CasinoFiBet 
 
 
+deployStaking:
+	@forge script script/DeployStaking.s.sol:DeployStaking $(NETWORK_ARGS)
 
-
-forge verify-contract \
-    --chain-id 84532 \
-    --num-of-optimizations 1000000 \
-    --watch \
-    --constructor-args $(cast abi-encode "constructor(address, address)" 0x430A863cC9A8B4B65e7cA085E62B9AAe3df80F2a 0xb1f540756bE3c06eBbcAC15d701C5477F271a7a0 ) \
-    --etherscan-api-key "55M4BYR6HE717WZY3RWG73QUSV1HT3HIUI" \
-    --compiler-version v0.8.18+commit.fc410830 \
-    0x5DBA5a9b04F8DE9f2Cc4e1868C6e43C8bB430dC7 \
-    src/CasinoFiBet.sol:CasinoFiBet 

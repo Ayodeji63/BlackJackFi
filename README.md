@@ -96,7 +96,7 @@ The journey to create CasinoFi was not without its hurdles. Overcoming challenge
 
 ## Upcoming Features
 
-While the current version of CasinoFi offers a taste of the casino experience, the team has exciting plans for the future:
+
 
 - **Enhanced Gameplay:**
   Look forward to the integration of features like `Split`, Insurance, Staking, and Double for an even more immersive gaming experience.
