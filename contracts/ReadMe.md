@@ -130,6 +130,7 @@ The `handleWinAndLoose` function manages player wins and losses. If a player win
 The `getTotalBetChips` function allows querying the total amount of chips a player has bet on a specific table.
 
 ### Early Access Minting
+Minting 
 
 During the early access period, early users can mint CasinoFiTokens using the `mintForEarlyUsers` function. This function is accessible until the end of the early access period, after which it becomes disabled.
 
